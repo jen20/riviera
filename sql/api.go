@@ -11,6 +11,12 @@ func sqlServerDefaultURLPath(resourceGroupName, serverName string) func() string
 	}
 }
 
+func sqlElasticPoolDefaultURLPath(resourceGroupName, serverName, elasticPoolName string) func() string {
+	return func() string {
+		return fmt.Sprintf("resourceGroups/%s/providers/%s/servers/%s/elasticPools/%s", resourceGroupName, apiProvider, serverName, elasticPoolName)
+	}
+}
+
 func sqlDatabaseDefaultURLPath(resourceGroupName, serverName, databaseName string) func() string {
 	return func() string {
 		return fmt.Sprintf("resourceGroups/%s/providers/%s/servers/%s/databases/%s", resourceGroupName, apiProvider, serverName, databaseName)
