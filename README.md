@@ -41,7 +41,7 @@ Some code:
 
 1. Construct a request and a command. Note the use of `azure.String("string")` as a convenience method for obtaining a pointer to a string
 
-        r.Operation = sql.CreateOrUpdateServer{
+        r.Command = sql.CreateOrUpdateServer{
             ResourceGroupName:          resourceGroupName,
             Name:                       "rivieradbservertest",
             Location:                   azure.WestUS,
