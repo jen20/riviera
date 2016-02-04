@@ -29,10 +29,10 @@ func (s *StepRegisterResourceProvider) Run(state AzureStateBag) StepAction {
 
 	if response.IsSuccessful() {
 		return Continue
-	} else {
-		state.AppendError(response.Error)
-		return Halt
 	}
+
+	state.AppendError(response.Error)
+	return Halt
 }
 
 func (s *StepRegisterResourceProvider) Cleanup(state AzureStateBag) {

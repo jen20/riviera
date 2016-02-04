@@ -34,10 +34,10 @@ func (s *StepCreateResourceGroup) Run(state AzureStateBag) StepAction {
 	if response.IsSuccessful() {
 		state.Put("resourcegroup", *response.Parsed.(*azure.CreateResourceGroupResponse))
 		return Continue
-	} else {
-		state.AppendError(response.Error)
-		return Halt
 	}
+
+	state.AppendError(response.Error)
+	return Halt
 }
 
 func (s *StepCreateResourceGroup) Cleanup(state AzureStateBag) {

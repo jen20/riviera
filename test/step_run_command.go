@@ -54,11 +54,11 @@ func (s *StepRunCommand) Run(state AzureStateBag) StepAction {
 			state.Remove(s.StateBagKey)
 			state.Put(s.StateBagKey, response.Parsed)
 			return Continue
-		} else {
-			state.Remove(s.StateBagKey)
-			state.AppendError(response.Error)
-			return Halt
 		}
+
+		state.Remove(s.StateBagKey)
+		state.AppendError(response.Error)
+		return Halt
 	}
 
 	return Continue

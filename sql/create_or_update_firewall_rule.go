@@ -6,16 +6,16 @@ type CreateOrUpdateFirewallRuleResponse struct {
 	ID             *string `mapstructure:"id"`
 	Name           *string `mapstructure:"name"`
 	Location       *string `mapstructure:"location"`
-	StartIpAddress *string `json:"startIpAddress,omitempty"`
-	EndIpAddress   *string `json:"endIpAddress,omitempty"`
+	StartIPAddress *string `json:"startIpAddress,omitempty"`
+	EndIPAddress   *string `json:"endIpAddress,omitempty"`
 }
 
 type CreateOrUpdateFirewallRule struct {
 	Name              string  `json:"-"`
 	ResourceGroupName string  `json:"-"`
 	ServerName        string  `json:"-"`
-	StartIpAddress    *string `json:"startIpAddress,omitempty"`
-	EndIpAddress      *string `json:"endIpAddress,omitempty"`
+	StartIPAddress    *string `json:"startIpAddress,omitempty"`
+	EndIPAddress      *string `json:"endIpAddress,omitempty"`
 }
 
 func (s CreateOrUpdateFirewallRule) APIInfo() azure.APIInfo {
