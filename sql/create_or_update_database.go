@@ -29,7 +29,7 @@ type CreateOrUpdateDatabase struct {
 	Collation                     *string            `json:"collation,omitempty"`
 	MaxSizeBytes                  *string            `json:"maxSizeBytes,omitempty"`
 	RequestedServiceObjectiveName *string            `json:"requestedServiceObjectiveName,omitempty"`
-	RequestedServiceObjectiveId   *string            `json:"requestedServiceObjectiveId,omitempty"`
+	RequestedServiceObjectiveID   *string            `json:"requestedServiceObjectiveId,omitempty"`
 	CreateMode                    *string            `json:"createMode,omitempty"`
 	SourceDatabaseID              *string            `json:"sourceDatabaseId,omitempty"`
 	SourceDatabaseDeletionDate    *string            `json:"sourceDatabaseDeletionDate,omitempty"`
