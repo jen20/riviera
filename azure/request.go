@@ -16,11 +16,11 @@ import (
 )
 
 type Request struct {
-	URI      *string             `json:"-"`
-	location *string             `json:"location,omitempty"`
-	tags     *map[string]*string `json:"tags,omitempty"`
-	etag     *string             `json:"etag,omitempty"`
-	Command  ApiCall             `json:"properties,omitempty"`
+	URI      *string
+	location *string
+	tags     *map[string]*string
+	etag     *string
+	Command  APICall
 
 	client *Client
 }
@@ -107,7 +107,7 @@ func (request *Request) pollForAsynchronousResponse(acceptedResponse *http.Respo
 }
 
 func (r *Request) Execute() (*Response, error) {
-	apiInfo := r.Command.ApiInfo()
+	apiInfo := r.Command.APIInfo()
 
 	var urlString string
 
@@ -157,7 +157,7 @@ func (r *Request) Execute() (*Response, error) {
 	}
 
 	query := req.URL.Query()
-	query.Set("api-version", apiInfo.ApiVersion)
+	query.Set("api-version", apiInfo.APIVersion)
 	req.URL.RawQuery = query.Encode()
 
 	if apiInfo.HasBody() {

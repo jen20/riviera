@@ -15,9 +15,9 @@ type CreateStorageAccount struct {
 	Tags              map[string]*string `json:"-" riviera:"tags"`
 }
 
-func (s CreateStorageAccount) ApiInfo() azure.ApiInfo {
-	return azure.ApiInfo{
-		ApiVersion:  apiVersion,
+func (s CreateStorageAccount) APIInfo() azure.APIInfo {
+	return azure.APIInfo{
+		APIVersion:  apiVersion,
 		Method:      "PUT",
 		URLPathFunc: storageDefaultURLPathFunc(s.ResourceGroupName, s.Name),
 		ResponseTypeFunc: func() interface{} {

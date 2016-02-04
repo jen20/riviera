@@ -16,9 +16,9 @@ type GetFirewallRule struct {
 	ServerName        string `json:"-"`
 }
 
-func (s GetFirewallRule) ApiInfo() azure.ApiInfo {
-	return azure.ApiInfo{
-		ApiVersion:  apiVersion,
+func (s GetFirewallRule) APIInfo() azure.APIInfo {
+	return azure.APIInfo{
+		APIVersion:  apiVersion,
 		Method:      "GET",
 		URLPathFunc: sqlServerFirewallDefaultURLPath(s.ResourceGroupName, s.ServerName, s.Name),
 		ResponseTypeFunc: func() interface{} {

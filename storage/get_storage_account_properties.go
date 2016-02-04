@@ -17,7 +17,7 @@ type GetStorageAccountPropertiesResponse struct {
 	StatusOfPrimary     *string `mapstructure:"statusOfPrimary"`
 	LastGeoFailoverTime *string `mapstructure:"lastGeoFailoverTime"`
 	SecondaryLocation   *string `mapstructure:"secondaryLocation"`
-	StatusOfSecondary   *string `mapstructure:statusOfSecondary"`
+	StatusOfSecondary   *string `mapstructure:"statusOfSecondary"`
 	SecondaryEndpoints  *struct {
 		Blob  *string `mapstructure:"blob"`
 		Queue *string `mapstructure:"queue"`
@@ -34,9 +34,9 @@ type GetStorageAccountProperties struct {
 	ResourceGroupName string `json:"-"`
 }
 
-func (s GetStorageAccountProperties) ApiInfo() azure.ApiInfo {
-	return azure.ApiInfo{
-		ApiVersion:  apiVersion,
+func (s GetStorageAccountProperties) APIInfo() azure.APIInfo {
+	return azure.APIInfo{
+		APIVersion:  apiVersion,
 		Method:      "GET",
 		URLPathFunc: storageDefaultURLPathFunc(s.ResourceGroupName, s.Name),
 		ResponseTypeFunc: func() interface{} {

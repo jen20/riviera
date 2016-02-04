@@ -7,9 +7,9 @@ type DeleteStorageAccount struct {
 	ResourceGroupName string `json:"-"`
 }
 
-func (command DeleteStorageAccount) ApiInfo() azure.ApiInfo {
-	return azure.ApiInfo{
-		ApiVersion:  apiVersion,
+func (command DeleteStorageAccount) APIInfo() azure.APIInfo {
+	return azure.APIInfo{
+		APIVersion:  apiVersion,
 		Method:      "DELETE",
 		URLPathFunc: storageDefaultURLPathFunc(command.ResourceGroupName, command.Name),
 		ResponseTypeFunc: func() interface{} {

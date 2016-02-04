@@ -37,9 +37,9 @@ type CreateOrUpdateDatabase struct {
 	ElasticPoolName               *string            `json:"elasticPoolName,omitempty"`
 }
 
-func (s CreateOrUpdateDatabase) ApiInfo() azure.ApiInfo {
-	return azure.ApiInfo{
-		ApiVersion:  apiVersion,
+func (s CreateOrUpdateDatabase) APIInfo() azure.APIInfo {
+	return azure.APIInfo{
+		APIVersion:  apiVersion,
 		Method:      "PUT",
 		URLPathFunc: sqlDatabaseDefaultURLPath(s.ResourceGroupName, s.ServerName, s.Name),
 		ResponseTypeFunc: func() interface{} {

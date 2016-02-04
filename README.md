@@ -102,11 +102,11 @@ Some code:
             State                      *string `mapstructure:"state"`
         }
 
-1. Implement the `ApiCall` interface for the command. The `URLPathFunc` argument makes use of the Name and Resource Group Name attributes to construct a URL, and the `ApiInfo` method determines the HTTP Method will be used. The `ResponseTypeFunc` function returns an instance of the response structure defined above, or `nil` if there is no response type.
+1. Implement the `APICall` interface for the command. The `URLPathFunc` argument makes use of the Name and Resource Group Name attributes to construct a URL, and the `APIInfo` method determines the HTTP Method will be used. The `ResponseTypeFunc` function returns an instance of the response structure defined above, or `nil` if there is no response type.
 
-        func (s CreateOrUpdateServer) ApiInfo() azure.ApiInfo {
-            return azure.ApiInfo{
-                ApiVersion:  apiVersion,
+        func (s CreateOrUpdateServer) APIInfo() azure.APIInfo {
+            return azure.APIInfo{
+                APIVersion:  apiVersion,
                 Method:      "PUT",
                 URLPathFunc: sqlServerDefaultURLPath(s.ResourceGroupName, s.Name),
                 ResponseTypeFunc: func() interface{} {

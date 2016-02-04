@@ -12,9 +12,9 @@ type UpdateStorageAccountType struct {
 	AccountType       *string `json:"accountType,omitempty"`
 }
 
-func (command UpdateStorageAccountType) ApiInfo() azure.ApiInfo {
-	return azure.ApiInfo{
-		ApiVersion:  apiVersion,
+func (command UpdateStorageAccountType) APIInfo() azure.APIInfo {
+	return azure.APIInfo{
+		APIVersion:  apiVersion,
 		Method:      "PATCH",
 		URLPathFunc: storageDefaultURLPathFunc(command.ResourceGroupName, command.Name),
 		ResponseTypeFunc: func() interface{} {
