@@ -114,7 +114,7 @@ func (r *Request) Execute() (*Response, error) {
 	// Base URL should already be validated by now so Parse is safe without error handling
 	urlObj, _ := url.Parse(r.client.BaseUrl)
 
-	// Determine whether to use the URLPathFunc or the URI explictly set in the request
+	// Determine whether to use the URLPathFunc or the URI explicitly set in the request
 	if r.URI == nil {
 		urlObj.Path = fmt.Sprintf("/subscriptions/%s/%s", r.client.subscriptionID, strings.TrimPrefix(apiInfo.URLPathFunc(), "/"))
 		urlString = urlObj.String()
