@@ -60,7 +60,7 @@ func Test(t *testing.T, c TestCase) {
 	log.Println("[INFO] Creating Azure Client...")
 	azureClient, err := azure.NewClient(creds)
 	if err != nil {
-		t.Fatal("Error creating Azure Client: %s", err)
+		t.Fatalf("Error creating Azure Client: %s", err)
 	}
 
 	state := &basicAzureStateBag{

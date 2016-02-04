@@ -12,9 +12,9 @@ type UpdateStorageAccountTags struct {
 	Tags              map[string]*string `json:"-" riviera:"tags"`
 }
 
-func (command UpdateStorageAccountTags) ApiInfo() azure.ApiInfo {
-	return azure.ApiInfo{
-		ApiVersion:  apiVersion,
+func (command UpdateStorageAccountTags) APIInfo() azure.APIInfo {
+	return azure.APIInfo{
+		APIVersion:  apiVersion,
 		Method:      "PATCH",
 		URLPathFunc: storageDefaultURLPathFunc(command.ResourceGroupName, command.Name),
 		ResponseTypeFunc: func() interface{} {

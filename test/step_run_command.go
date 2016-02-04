@@ -7,9 +7,9 @@ import (
 )
 
 type StepRunCommand struct {
-	RunCommand     azure.ApiCall
-	CleanupCommand azure.ApiCall
-	StateCommand   azure.ApiCall
+	RunCommand     azure.APICall
+	CleanupCommand azure.APICall
+	StateCommand   azure.APICall
 	StateBagKey    string
 }
 

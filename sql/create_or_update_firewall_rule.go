@@ -18,9 +18,9 @@ type CreateOrUpdateFirewallRule struct {
 	EndIpAddress      *string `json:"endIpAddress,omitempty"`
 }
 
-func (s CreateOrUpdateFirewallRule) ApiInfo() azure.ApiInfo {
-	return azure.ApiInfo{
-		ApiVersion:  apiVersion,
+func (s CreateOrUpdateFirewallRule) APIInfo() azure.APIInfo {
+	return azure.APIInfo{
+		APIVersion:  apiVersion,
 		Method:      "PUT",
 		URLPathFunc: sqlServerFirewallDefaultURLPath(s.ResourceGroupName, s.ServerName, s.Name),
 		ResponseTypeFunc: func() interface{} {

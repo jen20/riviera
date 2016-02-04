@@ -51,7 +51,7 @@ func main() {
 		fmt.Printf("\tLocation: %s\n", *result.Location)
 		fmt.Printf("\tProvisioningState: %s\n", *result.ProvisioningState)
 	} else {
-		log.Fatal("Failed creating resource group: %s", response.Error.Error())
+		log.Fatalf("Failed creating resource group: %s", response.Error.Error())
 	}
 
 	// 6 - Delete the resource group
