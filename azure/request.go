@@ -107,13 +107,13 @@ func (request *Request) pollForAsynchronousResponse(acceptedResponse *http.Respo
 	}
 }
 
-func defaultARMRequestStruct(request *Request) interface{} {
+func defaultARMRequestStruct(request *Request, properties interface{}) interface{} {
 	bodyStruct := struct {
 		Location   *string             `json:"location,omitempty"`
 		Tags       *map[string]*string `json:"tags,omitempty"`
 		Properties interface{}         `json:"properties"`
 	}{
-		Properties: request.Command,
+		Properties: properties,
 	}
 
 	if location, hasLocation := readLocation(request.Command); hasLocation {
@@ -156,7 +156,12 @@ func (request *Request) Execute() (*Response, error) {
 	// Encode the request body if necessary
 	var body io.ReadSeeker
 	if apiInfo.HasBody() {
-		bodyStruct := defaultARMRequestStruct(request)
+		var bodyStruct interface{}
+		if apiInfo.RequestPropertiesFunc != nil {
+			bodyStruct = defaultARMRequestStruct(request, apiInfo.RequestPropertiesFunc())
+		} else {
+			bodyStruct = defaultARMRequestStruct(request, request.Command)
+		}
 		serialized, err := defaultARMRequestSerialize(bodyStruct)
 		if err != nil {
 			return nil, err
