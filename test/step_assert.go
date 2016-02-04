@@ -80,3 +80,51 @@ func CheckStringProperty(stateBagKey, propertyName, expectedValue string) Assert
 		}
 	}
 }
+
+func CheckIntProperty(stateBagKey, propertyName string, expectedValue int64) AssertFunc {
+	return func(state AzureStateBag) error {
+
+		log.Printf("[INFO] Asserting %s.%s has value %d", stateBagKey, propertyName, expectedValue)
+
+		stateValue, ok := state.GetOk(stateBagKey)
+		if !ok {
+			return fmt.Errorf("Internal Test Error - Cannot find state key %q in state", stateBagKey)
+		}
+
+		var v reflect.Value
+		if reflect.ValueOf(stateValue).Kind() == reflect.Ptr {
+			v = reflect.ValueOf(stateValue).Elem()
+		} else {
+			v = reflect.ValueOf(stateValue)
+		}
+
+		switch v.Kind() {
+		case reflect.Struct:
+			propertyField := v.FieldByName(propertyName)
+
+			switch propertyField.Kind() {
+			case reflect.Int:
+				actualValue := propertyField.Int()
+				if actualValue != expectedValue {
+					return fmt.Errorf("%s.%s: Expected %d, Got %d", stateBagKey, propertyName, expectedValue, actualValue)
+				}
+
+				return nil
+
+			case reflect.Ptr:
+				actualValue := propertyField.Elem().Int()
+				if actualValue != expectedValue {
+					return fmt.Errorf("%s: Expected %d, Got %d", propertyName, expectedValue, actualValue)
+				}
+
+				return nil
+
+			default:
+				return fmt.Errorf("Internal Test Error - %q is not a int or *int - checkIntProperty may not be used with this type %q", propertyName, propertyField.Kind())
+			}
+
+		default:
+			return fmt.Errorf("Internal Test Error - Value for state bag key %q is not a struct", stateBagKey)
+		}
+	}
+}

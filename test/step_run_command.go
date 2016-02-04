@@ -1,16 +1,20 @@
 package test
 
 import (
+	"fmt"
 	"log"
+
+	"reflect"
 
 	"github.com/jen20/riviera/azure"
 )
 
 type StepRunCommand struct {
-	RunCommand     azure.APICall
-	CleanupCommand azure.APICall
-	StateCommand   azure.APICall
-	StateBagKey    string
+	RunCommand         azure.APICall
+	CleanupCommand     azure.APICall
+	StateCommandURIKey string
+	StateCommand       azure.APICall
+	StateBagKey        string
 }
 
 func (s *StepRunCommand) Run(state AzureStateBag) StepAction {
@@ -41,7 +45,21 @@ func (s *StepRunCommand) Run(state AzureStateBag) StepAction {
 	if s.StateCommand != nil {
 		log.Printf("[INFO] Refreshing state with %T command...", s.StateCommand)
 
-		r := azureClient.NewRequest()
+		var r *azure.Request
+		if s.StateCommandURIKey == "" {
+			r = azureClient.NewRequest()
+		} else {
+			uri, err := uriFromStateBagKey(state, s.StateBagKey, s.StateCommandURIKey)
+			if err != nil {
+				state.AppendError(err)
+				return Halt
+			}
+			if uri == "" {
+				state.AppendError(fmt.Errorf("URI from state bag was empty - check the (case-sensitive) paths in the test"))
+				return Halt
+			}
+			r = azureClient.NewRequestForURI(uri)
+		}
 
 		r.Command = s.StateCommand
 		response, err := r.Execute()
@@ -83,5 +101,36 @@ func (s *StepRunCommand) Cleanup(state AzureStateBag) {
 	if !response.IsSuccessful() {
 		log.Printf("[INFO] Error running clean up %T command", s.CleanupCommand)
 		state.AppendError(response.Error)
+	}
+}
+
+func uriFromStateBagKey(state AzureStateBag, stateBagKey, propertyPath string) (string, error) {
+	item, ok := state.GetOk(stateBagKey)
+	if !ok {
+		return "", fmt.Errorf("State bag key %q not found in state", stateBagKey)
+	}
+
+	itemValue := reflect.ValueOf(item)
+
+	switch itemValue.Kind() {
+	case reflect.Struct:
+		uriField := itemValue.FieldByName(propertyPath)
+
+		//TODO(jen20): zero handling
+
+		return uriField.String(), nil
+	case reflect.Ptr:
+		actualValue := itemValue.Elem()
+		if actualValue.Kind() != reflect.Struct {
+			return "", fmt.Errorf("State bag key %q is not a struct or pointer to struct", stateBagKey)
+		}
+		uriField := actualValue.FieldByName(propertyPath)
+
+		//TODO(jen20): zero handling
+
+		return uriField.String(), nil
+
+	default:
+		return "", fmt.Errorf("State bag key %q is not a struct or pointer to struct", stateBagKey)
 	}
 }
