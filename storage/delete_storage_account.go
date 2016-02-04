@@ -9,10 +9,9 @@ type DeleteStorageAccount struct {
 
 func (command DeleteStorageAccount) ApiInfo() azure.ApiInfo {
 	return azure.ApiInfo{
-		ApiVersion:         apiVersion,
-		Method:             "DELETE",
-		URLPathFunc:        storageDefaultURLPathFunc(command.ResourceGroupName, command.Name),
-		SkipArmBoilerplate: true,
+		ApiVersion:  apiVersion,
+		Method:      "DELETE",
+		URLPathFunc: storageDefaultURLPathFunc(command.ResourceGroupName, command.Name),
 		ResponseTypeFunc: func() interface{} {
 			return nil
 		},

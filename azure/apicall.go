@@ -11,11 +11,10 @@ type ApiCall interface {
 // version is required, the HTTP method to use, and a factory function for
 // responses.
 type ApiInfo struct {
-	ApiVersion         string
-	Method             string
-	SkipArmBoilerplate bool
-	URLPathFunc        func() string
-	ResponseTypeFunc   func() interface{}
+	ApiVersion       string
+	Method           string
+	URLPathFunc      func() string
+	ResponseTypeFunc func() interface{}
 }
 
 // HasBody returns true if the API Request should have a body. This is usually

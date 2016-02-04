@@ -19,9 +19,8 @@ type UpdateStorageAccountCustomDomain struct {
 
 func (command UpdateStorageAccountCustomDomain) ApiInfo() azure.ApiInfo {
 	return azure.ApiInfo{
-		ApiVersion: apiVersion,
-		Method:     "PATCH",
-		//SkipArmBoilerplate: true,
+		ApiVersion:  apiVersion,
+		Method:      "PATCH",
 		URLPathFunc: storageDefaultURLPathFunc(command.ResourceGroupName, command.Name),
 		ResponseTypeFunc: func() interface{} {
 			return &UpdateStorageAccountCustomDomainResponse{}

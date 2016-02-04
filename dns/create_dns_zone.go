@@ -11,10 +11,9 @@ type CreateDNSZone struct {
 
 func (command CreateDNSZone) ApiInfo() azure.ApiInfo {
 	return azure.ApiInfo{
-		ApiVersion:         apiVersion,
-		Method:             "PUT",
-		URLPathFunc:        dnsZoneDefaultURLPathFunc(command.ResourceGroupName, command.Name),
-		SkipArmBoilerplate: true,
+		ApiVersion:  apiVersion,
+		Method:      "PUT",
+		URLPathFunc: dnsZoneDefaultURLPathFunc(command.ResourceGroupName, command.Name),
 		ResponseTypeFunc: func() interface{} {
 			return nil
 		},

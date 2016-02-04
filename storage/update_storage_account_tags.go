@@ -17,7 +17,6 @@ func (command UpdateStorageAccountTags) ApiInfo() azure.ApiInfo {
 		ApiVersion:  apiVersion,
 		Method:      "PATCH",
 		URLPathFunc: storageDefaultURLPathFunc(command.ResourceGroupName, command.Name),
-		//SkipArmBoilerplate: true,
 		ResponseTypeFunc: func() interface{} {
 			return &UpdateStorageAccountTypeResponse{}
 		},
