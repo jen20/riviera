@@ -3,6 +3,7 @@ package dns
 import (
 	"testing"
 
+	"github.com/abdullin/seq"
 	"github.com/jen20/riviera/azure"
 	"github.com/jen20/riviera/test"
 )
@@ -40,9 +41,10 @@ func TestAccCreateDnsZone(t *testing.T) {
 				},
 			},
 			&test.StepAssert{
-				Checks: []test.AssertFunc{
-					test.CheckStringProperty("dnszone", "Name", zoneName),
-					test.CheckStringProperty("dnszone", "NumberOfRecordSets", "2"),
+				StateBagKey: "dnszone",
+				Assertions: seq.Map{
+					"Name":               zoneName,
+					"NumberOfRecordSets": 2,
 				},
 			},
 		},
@@ -112,8 +114,13 @@ func TestAccCreateDnsARecordSet(t *testing.T) {
 				},
 			},
 			&test.StepAssert{
-				Checks: []test.AssertFunc{
-					test.CheckIntProperty("dnsrecordset", "TTL", 300),
+				StateBagKey: "dnsrecordset",
+				Assertions: seq.Map{
+					"TTL":                     300,
+					"Name":                    recordSetName,
+					"Location":                azure.Global,
+					"ARecords[0].ipv4Address": "10.0.10.1",
+					"ARecords[1].ipv4Address": "10.0.10.2",
 				},
 			},
 		},

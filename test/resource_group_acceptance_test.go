@@ -3,6 +3,7 @@ package test
 import (
 	"testing"
 
+	"github.com/abdullin/seq"
 	"github.com/jen20/riviera/azure"
 )
 
@@ -16,9 +17,10 @@ func TestAccCreateResourceGroup(t *testing.T) {
 				Location: azure.WestUS,
 			},
 			&StepAssert{
-				Checks: []AssertFunc{
-					CheckStringProperty("resourcegroup", "Name", rgName),
-					CheckStringProperty("resourcegroup", "Location", azure.WestUS),
+				StateBagKey: "resourcegroup",
+				Assertions: seq.Map{
+					"Name":     rgName,
+					"Location": azure.WestUS,
 				},
 			},
 		},
