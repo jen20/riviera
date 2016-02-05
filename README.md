@@ -12,6 +12,7 @@ Riviera makes use of third-party libraries where possible - notably:
 - `go-retryablehttp` (HashiCorp)
 - `go-cleanhttp` (HashiCorp)
 - `mapstructure` (mitchellh)
+- `seq` (abdullin) [Test]
 
 ### How is this different from azure-sdk-for-go
 
