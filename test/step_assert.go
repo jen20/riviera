@@ -3,128 +3,45 @@ package test
 import (
 	"fmt"
 	"log"
-	"reflect"
+
+	"github.com/abdullin/seq"
 )
 
 type AssertFunc func(AzureStateBag) error
 
 type StepAssert struct {
 	StateBagKey string
-	Checks      []AssertFunc
+	Assertions  seq.Map
 }
 
 func (s *StepAssert) Run(state AzureStateBag) StepAction {
-	hasErrors := false
-
-	for _, v := range s.Checks {
-		if err := v(state); err != nil {
-			state.AppendError(err)
-			hasErrors = true
-		}
+	actual, ok := state.GetOk(s.StateBagKey)
+	if !ok {
+		state.AppendError(fmt.Errorf("Key %q not found in state", s.StateBagKey))
 	}
 
-	if hasErrors {
-		return Halt
+	for k, v := range s.Assertions {
+		path := fmt.Sprintf("%s.%s", s.StateBagKey, k)
+		log.Printf("[INFO] Asserting %q has value \"%v\"...", path, v)
 	}
 
-	return Continue
+	result := s.Assertions.Test(actual)
+
+	if result.Ok() {
+		return Continue
+	}
+
+	for _, v := range result.Issues {
+		err := fmt.Sprintf("Expected %q to be \"%v\" but got %q",
+			v.Path,
+			v.ExpectedValue,
+			v.ActualValue,
+		)
+		state.AppendError(fmt.Errorf(err))
+	}
+
+	return Halt
 }
 
 func (s *StepAssert) Cleanup(state AzureStateBag) {
-}
-
-func CheckStringProperty(stateBagKey, propertyName, expectedValue string) AssertFunc {
-	return func(state AzureStateBag) error {
-
-		log.Printf("[INFO] Asserting %s.%s has value %q", stateBagKey, propertyName, expectedValue)
-
-		stateValue, ok := state.GetOk(stateBagKey)
-		if !ok {
-			return fmt.Errorf("Internal Test Error - Cannot find state key %q in state", stateBagKey)
-		}
-
-		var v reflect.Value
-		if reflect.ValueOf(stateValue).Kind() == reflect.Ptr {
-			v = reflect.ValueOf(stateValue).Elem()
-		} else {
-			v = reflect.ValueOf(stateValue)
-		}
-
-		switch v.Kind() {
-		case reflect.Struct:
-			propertyField := v.FieldByName(propertyName)
-
-			switch propertyField.Kind() {
-			case reflect.String:
-				actualValue := propertyField.String()
-				if actualValue != expectedValue {
-					return fmt.Errorf("%s.%s: Expected %q, Got %q", stateBagKey, propertyName, expectedValue, actualValue)
-				}
-
-				return nil
-
-			case reflect.Ptr:
-				actualValue := propertyField.Elem().String()
-				if actualValue != expectedValue {
-					return fmt.Errorf("%s: Expected %q, Got %q", propertyName, expectedValue, actualValue)
-				}
-
-				return nil
-
-			default:
-				return fmt.Errorf("Internal Test Error - %q is not a string or *string - checkStringProperty may not be used with this type %q", propertyName, propertyField.Kind())
-			}
-
-		default:
-			return fmt.Errorf("Internal Test Error - Value for state bag key %q is not a struct", stateBagKey)
-		}
-	}
-}
-
-func CheckIntProperty(stateBagKey, propertyName string, expectedValue int64) AssertFunc {
-	return func(state AzureStateBag) error {
-
-		log.Printf("[INFO] Asserting %s.%s has value %d", stateBagKey, propertyName, expectedValue)
-
-		stateValue, ok := state.GetOk(stateBagKey)
-		if !ok {
-			return fmt.Errorf("Internal Test Error - Cannot find state key %q in state", stateBagKey)
-		}
-
-		var v reflect.Value
-		if reflect.ValueOf(stateValue).Kind() == reflect.Ptr {
-			v = reflect.ValueOf(stateValue).Elem()
-		} else {
-			v = reflect.ValueOf(stateValue)
-		}
-
-		switch v.Kind() {
-		case reflect.Struct:
-			propertyField := v.FieldByName(propertyName)
-
-			switch propertyField.Kind() {
-			case reflect.Int:
-				actualValue := propertyField.Int()
-				if actualValue != expectedValue {
-					return fmt.Errorf("%s.%s: Expected %d, Got %d", stateBagKey, propertyName, expectedValue, actualValue)
-				}
-
-				return nil
-
-			case reflect.Ptr:
-				actualValue := propertyField.Elem().Int()
-				if actualValue != expectedValue {
-					return fmt.Errorf("%s: Expected %d, Got %d", propertyName, expectedValue, actualValue)
-				}
-
-				return nil
-
-			default:
-				return fmt.Errorf("Internal Test Error - %q is not a int or *int - checkIntProperty may not be used with this type %q", propertyName, propertyField.Kind())
-			}
-
-		default:
-			return fmt.Errorf("Internal Test Error - Value for state bag key %q is not a struct", stateBagKey)
-		}
-	}
 }
