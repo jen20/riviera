@@ -12,12 +12,12 @@ type SOARecord struct {
 }
 
 type CreateSOARecordSetResponse struct {
-	ID         string             `mapstructure:"id"`
-	Name       string             `mapstructure:"name"`
-	Location   string             `mapstructure:"location"`
-	Tags       map[string]*string `mapstructure:"tags"`
-	TTL        *int               `mapstructure:"TTL"`
-	SOARecords []SOARecord        `mapstructure:"SOARecords"`
+	ID        string             `mapstructure:"id"`
+	Name      string             `mapstructure:"name"`
+	Location  string             `mapstructure:"location"`
+	Tags      map[string]*string `mapstructure:"tags"`
+	TTL       *int               `mapstructure:"TTL"`
+	SOARecord SOARecord          `mapstructure:"SOARecord"`
 }
 
 type CreateSOARecordSet struct {
@@ -27,7 +27,7 @@ type CreateSOARecordSet struct {
 	Location          string             `json:"-" riviera:"location"`
 	Tags              map[string]*string `json:"-" riviera:"tags"`
 	TTL               int                `json:"TTL"`
-	SOARecords        []SOARecord        `json:"SOARecords"`
+	SOARecord         SOARecord          `json:"SOARecord"`
 }
 
 func (command CreateSOARecordSet) APIInfo() azure.APIInfo {
