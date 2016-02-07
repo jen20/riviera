@@ -11,7 +11,7 @@ type SOARecord struct {
 	RetryTime   int    `json:"retryTime" mapstructure:"retryTime"`
 }
 
-type CreateSOARecordSetResponse struct {
+type UpdateSOARecordSetResponse struct {
 	ID        string             `mapstructure:"id"`
 	Name      string             `mapstructure:"name"`
 	Location  string             `mapstructure:"location"`
@@ -20,7 +20,7 @@ type CreateSOARecordSetResponse struct {
 	SOARecord SOARecord          `mapstructure:"SOARecord"`
 }
 
-type CreateSOARecordSet struct {
+type UpdateSOARecordSet struct {
 	Name              string             `json:"-"`
 	ResourceGroupName string             `json:"-"`
 	ZoneName          string             `json:"-"`
@@ -30,13 +30,13 @@ type CreateSOARecordSet struct {
 	SOARecord         SOARecord          `json:"SOARecord"`
 }
 
-func (command CreateSOARecordSet) APIInfo() azure.APIInfo {
+func (command UpdateSOARecordSet) APIInfo() azure.APIInfo {
 	return azure.APIInfo{
 		APIVersion:  apiVersion,
-		Method:      "PUT",
+		Method:      "PATCH",
 		URLPathFunc: dnsRecordSetDefaultURLPathFunc(command.ResourceGroupName, command.ZoneName, "SOA", command.Name),
 		ResponseTypeFunc: func() interface{} {
-			return &CreateSOARecordSetResponse{}
+			return &UpdateSOARecordSetResponse{}
 		},
 	}
 }
