@@ -8,7 +8,7 @@ type GetSearchServiceResponse struct {
 	ResourceGroupName  string             `json:"-"`
 	Location           string             `json:"-" riviera:"location"`
 	Tags               map[string]*string `json:"-" riviera:"tags"`
-	Sku                *string            `json:"sku,omitempty"`
+	Sku                *Sku               `json:"sku,omitempty"`
 	ReplicaCount       *string            `json:"replicaCount,omitempty"`
 	PartitionCount     *string            `json:"partitionCount,omitempty"`
 	Status             *string            `mapstructure:"status"`
