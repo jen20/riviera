@@ -3,23 +3,26 @@ package search
 import "github.com/jen20/riviera/azure"
 
 type CreateOrUpdateSearchServiceResponse struct {
-	ID       *string             `mapstructure:"id"`
-	Name     *string             `mapstructure:"name"`
-	Location *string             `mapstructure:"location"`
-	Tags     *map[string]*string `mapstructure:"tags"`
+	ID                 *string             `mapstructure:"id"`
+	Name               *string             `mapstructure:"name"`
+	Location           *string             `mapstructure:"location"`
+	Tags               *map[string]*string `mapstructure:"tags"`
+	Sku                *string             `json:"sku,omitempty"`
+	ReplicaCount       *string             `json:"replicaCount,omitempty"`
+	PartitionCount     *string             `json:"partitionCount,omitempty"`
+	Status             *string             `mapstructure:"status"`
+	StatusDetails      *string             `mapstructure:"statusDetails"`
+	ProvisioningStatus *string             `mapstructure:"provisioningStatus"`
 }
 
 type CreateOrUpdateSearchService struct {
-	Name               string             `json:"-"`
-	ResourceGroupName  string             `json:"-"`
-	Location           string             `json:"-" riviera:"location"`
-	Tags               map[string]*string `json:"-" riviera:"tags"`
-	Sku                *string            `json:"sku,omitempty"`
-	ReplicaCount       *string            `json:"replicaCount,omitempty"`
-	PartitionCount     *string            `json:"partitionCount,omitempty"`
-	Status             *string            `mapstructure:"status"`
-	StatusDetails      *string            `mapstructure:"statusDetails"`
-	ProvisioningStatus *string            `mapstructure:"provisioningStatus"`
+	Name              string             `json:"-"`
+	ResourceGroupName string             `json:"-"`
+	Location          string             `json:"-" riviera:"location"`
+	Tags              map[string]*string `json:"-" riviera:"tags"`
+	Sku               *string            `json:"sku,omitempty"`
+	ReplicaCount      *string            `json:"replicaCount,omitempty"`
+	PartitionCount    *string            `json:"partitionCount,omitempty"`
 }
 
 func (s CreateOrUpdateSearchService) APIInfo() azure.APIInfo {
