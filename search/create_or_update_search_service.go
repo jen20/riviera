@@ -24,7 +24,7 @@ type CreateOrUpdateSearchService struct {
 	ResourceGroupName string             `json:"-"`
 	Location          string             `json:"-" riviera:"location"`
 	Tags              map[string]*string `json:"-" riviera:"tags"`
-	Sku               Sku                `json:"sku,omitempty"`
+	Sku               Sku                `json:"-" riviera:"sku"`
 	ReplicaCount      *string            `json:"replicaCount,omitempty"`
 	PartitionCount    *string            `json:"partitionCount,omitempty"`
 }
