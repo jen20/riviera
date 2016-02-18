@@ -9,8 +9,8 @@ type GetSearchServiceResponse struct {
 	Location          string             `mapstructure:"location"`
 	Tags              map[string]*string `mapstructure:"tags"`
 	Sku               *Sku               `mapstructure:"sku"`
-	ReplicaCount      *string            `mapstructure:"replicaCount"`
-	PartitionCount    *string            `mapstructure:"partitionCount"`
+	ReplicaCount      *int               `mapstructure:"replicaCount"`
+	PartitionCount    *int               `mapstructure:"partitionCount"`
 	Status            *string            `mapstructure:"status"`
 	StatusDetails     *string            `mapstructure:"statusDetails"`
 	ProvisioningState *string            `mapstructure:"provisioningState"`
