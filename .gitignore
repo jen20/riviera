@@ -14,3 +14,4 @@ vendor/
 .*.swp
 .idea
 *.test
+*.iml
