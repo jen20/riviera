@@ -9,7 +9,7 @@ type GetDNSZoneResponse struct {
 	Tags                  *map[string]*string `mapstructure:"tags"`
 	NumberOfRecordSets    *string             `mapstructure:"numberOfRecordSets"`
 	MaxNumberOfRecordSets *string             `mapstructure:"maxNumberOfRecordSets"`
-	NameServers           *[]string           `mapstructure:"nameServers"`
+	NameServers           []*string           `mapstructure:"nameServers"`
 }
 
 type GetDNSZone struct {
