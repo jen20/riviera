@@ -21,6 +21,7 @@ type tokenRequester struct {
 	clientID     string
 	clientSecret string
 	tenantID     string
+	endpoints    Endpoints
 
 	refreshWithin time.Duration
 
@@ -30,13 +31,14 @@ type tokenRequester struct {
 	currentToken *token
 }
 
-func newTokenRequester(client *retryablehttp.Client, clientID, clientSecret, tenantID string) *tokenRequester {
+func newTokenRequester(client *retryablehttp.Client, clientID, clientSecret, tenantID string, endpoints Endpoints) *tokenRequester {
 	return &tokenRequester{
 		clientID:      clientID,
 		clientSecret:  clientSecret,
 		tenantID:      tenantID,
 		refreshWithin: 5 * time.Minute,
 		httpClient:    client,
+		endpoints:     endpoints,
 	}
 }
 
@@ -71,13 +73,13 @@ func (tr *tokenRequester) getUsableToken() (*token, error) {
 }
 
 func (tr *tokenRequester) refreshToken() (*token, error) {
-	oauthURL := fmt.Sprintf("https://login.microsoftonline.com/%s/oauth2/%s?api-version=1.0", tr.tenantID, "token")
+	oauthURL := fmt.Sprintf("%s/%s/oauth2/%s?api-version=1.0", tr.endpoints.activeDirectoryEndpointUrl, tr.tenantID, "token")
 
 	v := url.Values{}
 	v.Set("client_id", tr.clientID)
 	v.Set("client_secret", tr.clientSecret)
 	v.Set("grant_type", "client_credentials")
-	v.Set("resource", "https://management.azure.com/")
+	v.Set("resource", tr.endpoints.resourceManagerEndpointUrl)
 
 	var newToken token
 	response, err := tr.httpClient.PostForm(oauthURL, v)

@@ -5,4 +5,5 @@ type AzureResourceManagerCredentials struct {
 	ClientSecret   string
 	TenantID       string
 	SubscriptionID string
+	Environment    environment
 }
