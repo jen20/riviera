@@ -18,6 +18,7 @@ func main() {
 		ClientSecret:   os.Getenv("ARM_CLIENT_SECRET"),
 		TenantID:       os.Getenv("ARM_TENANT_ID"),
 		SubscriptionID: os.Getenv("ARM_SUBSCRIPTION_ID"),
+		Environment:    azure.StringToEnvironment(os.Getenv("ARM_ENVIRONMENT")),
 	}
 
 	azureClient, err := azure.NewClient(creds)

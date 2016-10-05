@@ -9,12 +9,12 @@ const (
 	AzureUSGovernment
 )
 
-type Endpoint struct {
+type Endpoints struct {
 	resourceManagerEndpointUrl string
 	activeDirectoryEndpointUrl string
 }
 
-var environments = []Endpoint{
+var environments = []Endpoints{
 	// AzureCloud
 	{"https://management.azure.com", "https://login.microsoftonline.com"},
 	// AzureGermanCloud
@@ -25,6 +25,25 @@ var environments = []Endpoint{
 	{"https://management.usgovcloudapi.net", "https://login.microsoftonline.com"},
 }
 
-func GetEndpoints(e environment) Endpoint {
+func StringToEnvironment(str string) environment {
+	var env environment
+
+	switch str {
+	case "AzureCloud":
+		env = AzureCloud
+	case "AzureGermanCloud":
+		env = AzureGermanCloud
+	case "AzureChinaCloud":
+		env = AzureChinaCloud
+	case "AzuerUSGovernment":
+		env = AzureUSGovernment
+	default:
+		env = AzureCloud
+	}
+
+	return env
+}
+
+func GetEndpoints(e environment) Endpoints {
 	return environments[e]
 }

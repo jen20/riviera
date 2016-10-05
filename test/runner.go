@@ -6,7 +6,6 @@ import (
 	"os"
 	"testing"
 
-	"github.com/hashicorp/go-multierror"
 	"github.com/jen20/riviera/azure"
 )
 
@@ -38,6 +37,7 @@ func Test(t *testing.T, c TestCase) {
 		ClientSecret:   os.Getenv("ARM_CLIENT_SECRET"),
 		TenantID:       os.Getenv("ARM_TENANT_ID"),
 		SubscriptionID: os.Getenv("ARM_SUBSCRIPTION_ID"),
+		Environment:    azure.StringToEnvironment(os.Getenv("ARM_ENVIRONMENT")),
 	}
 
 	var prerollErrors *multierror.Error
@@ -52,6 +52,9 @@ func Test(t *testing.T, c TestCase) {
 	}
 	if creds.SubscriptionID == "" {
 		prerollErrors = multierror.Append(prerollErrors, fmt.Errorf("The ARM_SUBSCRIPTION_ID environment variable must be set to run acceptance tests"))
+	}
+	if creds.Environment == "" {
+		prerollErrors = multierror.Append(prerollErrors, fmt.Errorf("The ARM_ENVIRONMENT environment variable must be set to run acceptance tests"))
 	}
 	if errs := prerollErrors.ErrorOrNil(); errs != nil {
 		t.Fatal(errs)

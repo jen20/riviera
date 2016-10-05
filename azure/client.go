@@ -4,8 +4,9 @@ import (
 	"io/ioutil"
 	"log"
 
-	"github.com/hashicorp/go-retryablehttp"
 	"net/http"
+
+	"github.com/hashicorp/go-retryablehttp"
 )
 
 type Client struct {
@@ -24,10 +25,12 @@ func NewClient(creds *AzureResourceManagerCredentials) (*Client, error) {
 	httpClient := retryablehttp.NewClient()
 	httpClient.Logger = defaultLogger
 
-	tr := newTokenRequester(httpClient, creds.ClientID, creds.ClientSecret, creds.TenantID)
+	endpoints := GetEndpoints(creds.Environment)
+
+	tr := newTokenRequester(httpClient, creds.ClientID, creds.ClientSecret, creds.TenantID, endpoints)
 
 	return &Client{
-		BaseURL:        "https://management.azure.com",
+		BaseURL:        endpoints.resourceManagerEndpointUrl,
 		subscriptionID: creds.SubscriptionID,
 		httpClient:     httpClient,
 		tokenRequester: tr,
@@ -35,7 +38,7 @@ func NewClient(creds *AzureResourceManagerCredentials) (*Client, error) {
 	}, nil
 }
 
-func (c *Client) SetRequestLoggingHook(hook func (*log.Logger, *http.Request, int)) {
+func (c *Client) SetRequestLoggingHook(hook func(*log.Logger, *http.Request, int)) {
 	c.httpClient.RequestLogHook = hook
 }
 
