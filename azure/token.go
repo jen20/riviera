@@ -5,6 +5,7 @@ import (
 	"fmt"
 	"net/url"
 	"strconv"
+	"strings"
 	"sync"
 	"time"
 
@@ -43,8 +44,8 @@ func newTokenRequester(client *retryablehttp.Client, clientID, clientSecret, ten
 // addAuthorizationToRequest adds an Authorization header to an http.Request, having ensured
 // that the token is sufficiently fresh. This may invoke network calls, so should not be
 // relied on to return quickly.
-func (tr *tokenRequester) addAuthorizationToRequest(request *retryablehttp.Request, location string) error {
-	token, err := tr.getUsableToken(location)
+func (tr *tokenRequester) addAuthorizationToRequest(request *retryablehttp.Request, endpoints Endpoints) error {
+	token, err := tr.getUsableToken(endpoints)
 	if err != nil {
 		return fmt.Errorf("Error obtaining authorization token: %s", err)
 	}
@@ -53,7 +54,7 @@ func (tr *tokenRequester) addAuthorizationToRequest(request *retryablehttp.Reque
 	return nil
 }
 
-func (tr *tokenRequester) getUsableToken(location string) (*token, error) {
+func (tr *tokenRequester) getUsableToken(endpoints Endpoints) (*token, error) {
 	tr.l.Lock()
 	defer tr.l.Unlock()
 
@@ -61,7 +62,7 @@ func (tr *tokenRequester) getUsableToken(location string) (*token, error) {
 		return tr.currentToken, nil
 	}
 
-	newToken, err := tr.refreshToken(location)
+	newToken, err := tr.refreshToken(endpoints)
 	if err != nil {
 		return nil, fmt.Errorf("Error refreshing token: %s", err)
 	}
@@ -70,15 +71,14 @@ func (tr *tokenRequester) getUsableToken(location string) (*token, error) {
 	return newToken, nil
 }
 
-func (tr *tokenRequester) refreshToken(location string) (*token, error) {
-	endpoints := GetEndpoints(location)
+func (tr *tokenRequester) refreshToken(endpoints Endpoints) (*token, error) {
 	oauthURL := fmt.Sprintf("%s/%s/oauth2/%s?api-version=1.0", endpoints.activeDirectoryEndpointUrl, tr.tenantID, "token")
 
 	v := url.Values{}
 	v.Set("client_id", tr.clientID)
 	v.Set("client_secret", tr.clientSecret)
 	v.Set("grant_type", "client_credentials")
-	v.Set("resource", endpoints.resourceManagerEndpointUrl)
+	v.Set("resource", strings.TrimSuffix(endpoints.resourceManagerEndpointUrl, "/")+"/")
 
 	var newToken token
 	response, err := tr.httpClient.PostForm(oauthURL, v)
