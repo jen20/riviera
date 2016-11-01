@@ -75,8 +75,8 @@ func (request *Request) pollForAsynchronousResponse(acceptedResponse *http.Respo
 			return nil, err
 		}
 
-		location := reflect.Indirect(reflect.ValueOf(request.Command)).FieldByName("Location").Interface().(string)
-		err = request.client.tokenRequester.addAuthorizationToRequest(req, location)
+		endpoints := GetEndpointsForCommand(request.Command)
+		err = request.client.tokenRequester.addAuthorizationToRequest(req, endpoints)
 		if err != nil {
 			return nil, err
 		}
@@ -116,11 +116,11 @@ func defaultARMRequestSerialize(body interface{}) (io.ReadSeeker, error) {
 func (request *Request) Execute() (*Response, error) {
 	apiInfo := request.Command.APIInfo()
 
-	location := reflect.Indirect(reflect.ValueOf(request.Command)).FieldByName("Location").Interface().(string)
+	endpoints := GetEndpointsForCommand(request.Command)
 
 	var urlString string
 
-	urlObj, _ := url.Parse(GetEndpoints(location).resourceManagerEndpointUrl)
+	urlObj, _ := url.Parse(endpoints.resourceManagerEndpointUrl)
 
 	// Determine whether to use the URLPathFunc or the URI explicitly set in the request
 	if request.URI == nil {
@@ -166,7 +166,7 @@ func (request *Request) Execute() (*Response, error) {
 		req.Header.Add("Content-Type", "application/json")
 	}
 
-	err = request.client.tokenRequester.addAuthorizationToRequest(req, location)
+	err = request.client.tokenRequester.addAuthorizationToRequest(req, endpoints)
 	if err != nil {
 		return nil, err
 	}
