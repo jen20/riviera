@@ -2,9 +2,6 @@ package azure
 
 import "fmt"
 
-// SkuName enumerates the values for sku name.
-type RegistrationState string
-
 type GetResourceProviderResponse struct {
 	ID                *string `mapstructure:"id"`
 	Namespace         *string `mapstructure:"namespace"`
