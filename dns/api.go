@@ -2,7 +2,7 @@ package dns
 
 import "fmt"
 
-const apiVersion = "2015-05-04-preview"
+const apiVersion = "2016-04-01"
 const apiProvider = "Microsoft.Network"
 
 func dnsZoneDefaultURLPathFunc(resourceGroupName, dnsZoneName string) func() string {
