@@ -1,5 +1,7 @@
 ## Riviera
 
+# This repository is deprecated, and left available only for those depending on it. Terraform no longer uses it and consequently it is unlikely that support will ever be extended.
+
 Riviera is an opinionated Azure Resource Manager API client for Go. The primary purpose at the current time is to easily implement support for services which the official client does not support.
 
 Riviera explictly tries to provide a consistent API model informed by real-world usage. Some examples of this:
